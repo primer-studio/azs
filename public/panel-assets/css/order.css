@@ -1,0 +1,32 @@
+.search-result-container {
+    z-index: 10;
+}
+
+.selected.search-result {
+    background: #30383c;
+}
+
+.selected.search-result td {
+    color: #ffffff !important;
+}
+
+.meal.breakfast {
+    background: #f9fdffb8;
+}
+
+.meal.lunch {
+    background: #f9fff9b8;
+}
+
+.meal.snack1, .meal.snack2, .meal.snack3 {
+    background: #fff9f9b8;
+}
+
+.alert.food {
+    background: white;
+}
+
+.search-result-container {
+    max-height: 217px;
+    overflow-y: auto;
+}

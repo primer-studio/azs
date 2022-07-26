@@ -1,0 +1,43 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-grab {
+    cursor: grab;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.remove-arrows::-webkit-outer-spin-button,
+input.remove-arrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input.remove-arrows[type=number] {
+    -moz-appearance: textfield;
+}
+
+.font-size-11 {
+    font-size: 11px !important;
+}
+
+.font-size-12 {
+    font-size: 12px !important;
+}
+
+.dir-ltr {
+    direction: ltr !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-danger a {
+    color: #fd397a !important;
+}

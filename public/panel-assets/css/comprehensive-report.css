@@ -1,0 +1,32 @@
+.comprehensive-report a {
+    color: black !important;
+}
+.comprehensive-report .table-active a {
+    color: white !important;
+}
+.comprehensive-report .table-expired {
+    background: #ffd194 !important;
+}
+.comprehensive-report .bg-danger {
+    color: #ffffff !important
+}
+
+.order-week-1 {
+    background: #FDC5F5 !important;
+    color: black !important;
+}
+
+.order-week-2 {
+    background: #aeddf8 !important;
+    color: black !important;
+}
+
+.order-week-3 {
+    background: #b9f8ae !important;
+    color: black !important;
+}
+
+.order-week-4 {
+    background: #f18080 !important;
+    color: black !important;
+}
