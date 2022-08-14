@@ -1169,6 +1169,12 @@
             <!-- end:: Header -->
             <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
 
+                @if(env('APP_ENG') !== 'production')
+                    <div style="width: 100%; padding: 1%; margin-bottom: 2%; background: #721c24; color: white; text-align: center; font-family: Courier New, Courier, monospace">
+                        <p>you are in local/dev server</p>
+                    </div>
+            @endif
+
                 <!-- begin:: Content -->
                 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
 

@@ -113,6 +113,11 @@
 </head>
 
 <body class="whiteBackColor">
+@if(env('APP_ENG') !== 'production')
+<div style="width: 100%; padding: 1%; margin-bottom: 2px; background: #721c24; color: white; text-align: center; font-family: Courier New, Courier, monospace">
+    <p>you are in local/dev server</p>
+</div>
+@endif
 
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WXSK7CB"
