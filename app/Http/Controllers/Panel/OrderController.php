@@ -10,10 +10,12 @@ use App\Events\OrderCompletedEvent;
 use App\Events\OrderSeenEvent;
 use App\Events\OrderStoredEvent;
 use App\Food;
+use App\Http\Controllers\ThirdParty\SmsController;
 use App\Order;
 use App\Http\Controllers\Controller;
 use App\Recommendation;
 use App\Sport;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -176,6 +178,12 @@ class OrderController extends Controller
         event(new DailyPlanStoredEvent($order));
         if ($order_completed) {
             event(new OrderCompletedEvent($order));
+//            $adapter = New SmsController();
+//            $profile = [
+//                'mobile_number' => User::find($order->profile->user_id)->mobile_number,
+//                'name' => (is_null($order->profile->name)) ? 'کاربر' : $order->profile->name,
+//            ];
+//            $adapter->SendDietReadySMS($profile['mobile_number'], $profile['name']);
         }
         return setSuccessfulResponse(route('panel.orders.edit', ['order' => $order->id]));
     }
@@ -397,6 +405,13 @@ class OrderController extends Controller
             event(new OrderSeenEvent($order));
         }
         event(new DailyPlanStoredEvent($order));
+
+//        return [
+//            'foods' => $insert_foods,
+//            'recommendations' => $insert_recommendations,
+//            'sports' => $insert_sports
+//        ];
+
         return setSuccessfulResponse(route('panel.orders.edit', ['order' => $order->id]));
     }
 }

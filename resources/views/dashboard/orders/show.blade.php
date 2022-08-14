@@ -52,7 +52,14 @@
 
     @if(!empty($diet))
         <!--begin::daily plans-->
-        <div class="tabc-week">
+        <div class="tabc-week" style="
+            background: white;
+            padding: 4%;
+            margin-top: 2%;
+            border-radius: 5px;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        ">
+            <p>بر روی روز موردنظر کلیک کرده تا برنامه مختص آن نمایش داده شود.</p>
             <!--begin::daily plan-->
             @foreach($diet->days as $day_number => $day)
                 <div class="content content-{{ $day_number }} dietMe-content @if(\Carbon\Carbon::today()->timestamp != $day) tempDisable @endif  daily-plan-{{ $day_number }} @if(\Carbon\Carbon::today()->timestamp == $day) @endif">
@@ -68,7 +75,8 @@
                             @foreach($diet->sports[$day_number] as $sport)
                                 <li class="d-flex align-items-center justify-content-between w-100 px-2">
                                     <div class="d-flex align-items-center cursor-pointer open-modal" data-target=".food-popup">
-                                        <figure class="d-flex align-items-center justify-content-center">
+                                        <figure class="d-flex align-items-center justify-content-center"
+                                            style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
                                             <img src="img/workout.svg" title="" alt="">
                                         </figure>
                                         <div class="d-felx flex-wrap align-items-center">
@@ -93,7 +101,8 @@
                             @foreach($diet->recommendations[$day_number] as $recommendation)
                                 <li class="d-flex align-items-center justify-content-between w-100 px-2">
                                     <div class="d-flex align-items-center cursor-pointer open-modal" data-target=".food-popup">
-                                        <figure class="d-flex align-items-center justify-content-center">
+                                        <figure class="d-flex align-items-center justify-content-center"
+                                            style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
                                             <img src="img/help.svg" title="" alt="">
                                         </figure>
                                         <div class="d-felx flex-wrap align-items-center">

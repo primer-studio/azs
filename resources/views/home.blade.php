@@ -1035,7 +1035,7 @@
 </div>
 
 <div class="fixed-reg-btn goto-reg-btn">
-    <a href="https://azshanbe.me/#SignInBox"> دریافت رژیم / ۴۹ هزار تومان </a>
+    <a href="https://azshanbe.me/#SignInBox">دریافت رژیم</a>
 </div>
 
 <a href="https://bit.ly/2XsNjDj" target="_blank" class="custom-support-btn" title="ارتباط با پشتیبان">

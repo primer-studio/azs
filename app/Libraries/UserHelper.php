@@ -6,6 +6,7 @@ namespace App\Libraries;
 
 use App\Constants\GeneralConstants;
 use App\Events\ProfileStoredEvent;
+use App\Http\Controllers\ThirdParty\SmsController;
 use App\Jobs\sendUserMobileVerificationCode;
 use App\User;
 use Facades\App\Libraries\SmsHelper;
@@ -86,9 +87,14 @@ class UserHelper
     {
         $data = [];
         $data['verification_code'] = generateRandomCode();
+        if (env('APP_ENV') != 'production') {
+            $data['verification_code'] = 123;
+        }
         $data['verification_code_set_at'] = time();
         $user = $this->updateUser($user, $data);
-        SmsHelper::sendVerificationCode($user->mobile_number, $data['verification_code']);
+//        SmsHelper::sendVerificationCode($user->mobile_number, $data['verification_code']);
+        $adapter = New SmsController();
+        $adapter->SendVerificationCode($user->mobile_number, $data['verification_code']);
         return $user;
     }
 

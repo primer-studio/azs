@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if($this->app->environment('production')) {
+            \URL::forceScheme('https');
+        }
+
         // settings model observer to update settings cache after database changes
         Setting::observe(SettingObserver::class);
         // diet model observer to update diet cache after database changes

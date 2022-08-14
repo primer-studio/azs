@@ -12,6 +12,8 @@
 */
 
 
+Route::get('my/test', 'TestController@test');
+
 Route::group(['middleware' => ['web', 'checkAffiliationPartner', 'checkTrackingQueryString']], function () {
     Route::get('/', 'HomeController@index')->name('home');
 

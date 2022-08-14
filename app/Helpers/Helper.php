@@ -10,7 +10,9 @@ if (!function_exists('generateRandomCode')) {
 
     function generateRandomCode()
     {
-        return rand(1000, 9999);
+//        return rand(1000, 9999);
+        $adapter = new \App\Http\Controllers\ThirdParty\SmsController();
+        return $adapter->GenerateOTP();
     }
 }
 
@@ -79,7 +81,7 @@ use Illuminate\Support\Facades\Validator;
 if (!function_exists('jdate')) {
     function jdate($input, $persian_numbers = true, $format = 'Y/m/d')
     {
-        
+
         if (is_string($input)) {
             $input = Carbon::create($input);
         }
@@ -204,12 +206,16 @@ if (!function_exists('hiReport')) {
 }
 
 if (!function_exists('money')) {
-    function money($money, $convert_to_toman = true)
+    function money($money, $convert_to_toman = true, $fa_chars = false)
     {
+        $en = explode('-', '1-2-3-4-5-6-7-8-9-0');
+        $fa = explode('-', '۱-۲-۳-۴-۵-۶-۷-۸-۹-۰');
         if ($convert_to_toman) {
             $money = $money / 10;
         }
-        return number_format($money, 0);
+//        return number_format($money, 0);
+        $output = number_format($money, 0);
+        return ($fa_chars) ? str_replace($en, $fa, $output) : $output ;
     }
 }
 

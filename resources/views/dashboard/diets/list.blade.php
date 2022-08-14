@@ -18,6 +18,8 @@
                 <a class="pos-absolute" href="{{ route('dashboard.diets.show-step', ['slug' => $diet->slug, 'period' => $diet->active_periods_steps_questions->keys()->first(), 'step_number' => 1]) }}"></a>
                 @if($diet->title == 'رژیم کاهش وزن')
                     <img src="img/slim.svg" alt="" title="">
+                @elseif(!is_null($diet->image))
+                    <img src="{{ $diet->image }}" alt="" title="">
                 @else
                     <img src="img/calories.svg" alt="" title="">
                 @endif

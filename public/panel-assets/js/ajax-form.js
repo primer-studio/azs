@@ -122,6 +122,9 @@ $.fn.ajaxForm = function (is_update, confirm_message = '') {
             error: function (jqXhr, textStatus, errorThrown) {
                 stopSending(submit_button, submit_button_main_text, form_id);
                 // TODO[front-end]: mange this: show unknown error
+                console.log(errorThrown);
+                console.log(textStatus);
+                console.log(jqXhr.responseText);
                 addErrorNotification(there_was_a_problem);
                 console.log('unknown error')
             }

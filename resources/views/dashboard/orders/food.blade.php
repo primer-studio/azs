@@ -1,6 +1,7 @@
 <li class="d-flex align-items-center justify-content-between w-100 px-2">
     <div class="d-flex align-items-center cursor-pointer open-modal" data-target=".food-popup-{{ $food->food_id }}">
-        <figure class="d-flex align-items-center justify-content-center">
+        <figure class="d-flex align-items-center justify-content-center"
+            style="box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
             <img src="./img/fast-food.svg" title="" alt="">
         </figure>
         <div class="d-felx flex-wrap align-items-center">
