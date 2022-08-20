@@ -26,6 +26,11 @@ class Order extends Model
         return $this->hasMany('App\DailyFoodPlan');
     }
 
+    public function CustomDietDailyPlan()
+    {
+        return $this->hasOne('App\CustomDietDailyPlan');
+    }
+
     public function dailySportPlans()
     {
         return $this->hasMany('App\DailySportPlan');

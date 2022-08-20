@@ -18,6 +18,7 @@ use App\Sport;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use function GuzzleHttp\Promise\all;
@@ -37,6 +38,7 @@ class OrderController extends Controller
     public function edit($id, Request $request)
     {
         $order = Order::findOrFail($id);
+//        return dd($order->diet);
         // TODO[back-end]: this is for test, remove this
         if ($request->has('fake')) {
             # =========================  fake data - start ========================= #
@@ -413,5 +415,19 @@ class OrderController extends Controller
 //        ];
 
         return setSuccessfulResponse(route('panel.orders.edit', ['order' => $order->id]));
+    }
+
+    public function storeCustomDailyPlan($order_id, Request $request) {
+        $final_plan = [];
+        foreach ($request['day'] as $day => $plan) {
+            foreach ($plan['foods'] as $food_item) {
+                $final_plan[$day]['foods'][] = Food::where('id', $food_item)->get()->first()->title;
+            }
+            foreach ($plan['sports'] as $food_item) {
+                $final_plan[$day]['sports'][] = Sport::where('id', $food_item)->get()->first()->title;
+            }
+        }
+
+        return $final_plan;
     }
 }

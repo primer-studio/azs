@@ -98,6 +98,9 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'panel', 'namespace' => 
     Route::group(['prefix' => 'orders', 'as' => 'orders.'], function () {
         Route::post("/search", 'OrderController@search')->name('search');
         Route::post("/{order}/store-daily-plan", 'OrderController@storeDailyPlan')->name('store-daily-plan');
+
+        Route::post("/{order}/custom-diet-daily-plan", 'OrderController@storeCustomDailyPlan')->name('store-custom-daily-plan');
+
         Route::post("/{order}/upload-diet-file", "OrderController@uploadDietFile")->name("upload-diet-file");
         Route::post("/{order}/delete-diet-file", "OrderController@deleteDietFile")->name("delete-diet-file");
     });
@@ -257,3 +260,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 
 
 });
 # =========================  dashboard (user) -  end  ========================= #
+
+
+Route::get('test', "TestController@test");

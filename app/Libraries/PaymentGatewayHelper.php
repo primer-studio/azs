@@ -6,6 +6,7 @@ namespace App\Libraries;
 
 use App\Constants\GeneralConstants;
 use App\Diet;
+use App\Jobs\AdminNewOrderJob;
 use App\PaymentGateway;
 use Facades\App\Libraries\DietHelper;
 use Facades\App\Libraries\ProfileHelper;
@@ -91,6 +92,11 @@ class PaymentGatewayHelper
             DietHelper::resetSessionDiets();
         }
 //        return $invoice;
+        $backpack = [
+            'is_test' => true,
+            'invoice_id' => $invoice->id
+        ];
+        AdminNewOrderJob::dispatchNow($backpack);
         return view('dashboard.payment.payment-result')->with(compact('invoice'));
     }
 }

@@ -32,7 +32,7 @@ class Invoice extends Model
         return $this->belongsTo('App\Profile');
     }
 
-    public function invoiceItems()
+        public function invoiceItems()
     {
         return $this->hasMany('App\InvoiceItem');
     }

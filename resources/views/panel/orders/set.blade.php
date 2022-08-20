@@ -102,6 +102,63 @@
 </div>
 <!--end:: order details-->
 
+<div class="kt-portlet">
+    <div class="kt-portlet__body">
+        <form method="post" action="{{ route('panel.orders.store-custom-daily-plan', ['order' => $order->id]) }}">
+            @csrf
+            <div id="day_confirm" class="col-md-auto col-sm-12 m-2">
+                <button type="submit">ثبت برنامه روزانه</button>
+            </div>
+            @php
+                $foods = App\Food::all();
+                $sports = App\Sport::all();
+                $recommendations = App\Recommendation::all();
+            @endphp
+            @foreach($diet->days as $day)
+                <div class="row">
+                    <div class="row w-100 mb-5 p-3 m-4 shadow rounded">
+                        <div class="w-100 mb-2 border-bottom">
+                            <p class="title">روز {{ $loop->iteration }} &nbsp;&nbsp;&nbsp;&nbsp; <span>({{ jdate($day) }})</span></p>
+                        </div>
+                        <div id="day_summary" class="w-75 m-2">
+                            <div class="">
+                                <div class="">صبحانه</div>
+                                <div class="">ورزش</div>
+                                <div class="">میان وعده</div>
+                                <div class="">ناهار</div>
+                                <div class="">شام</div>
+                            </div>
+                        </div>
+                        <div id="day_items" class="w-auto m-2">
+                            @foreach($foods as $food)
+                                <div class="form-check">
+                                    <input checked class="form-check-input" type="checkbox" name="day[{{$loop->parent->iteration}}][foods][]" value="{{$food->id}}" id="day[{{$loop->parent->iteration}}][foods][{{$food->id}}]">
+                                    <label class="form-check-label" for="day[{{$loop->parent->iteration}}][foods][{{$food->id}}]">
+                                        {{ $food->title }}
+                                    </label>
+                                </div>
+                            @endforeach
+                            @foreach($sports as $sport)
+                                <div class="form-check">
+                                    <input checked class="form-check-input" type="checkbox" name="day[{{$loop->parent->iteration}}][sports][]" value="{{$sport->id}}" id="day[{{$loop->parent->iteration}}][sports][{{$sport->id}}]">
+                                    <label class="form-check-label" for="day[{{$loop->parent->iteration}}][sports][{{$sport->id}}]">
+                                        {{ $sport->title }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+{{--            @break--}}
+            @endforeach
+            <div id="day_confirm" class="col-md-auto col-sm-12 m-2">
+                <button type="submit">ثبت برنامه روزانه</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 @AjaxForm(['form_id' => 'daily-plan-form', 'is_update' => false ])@endAjaxForm
 <form action="{{ route('panel.orders.store-daily-plan', ['order' => $order->id]) }}"
       id="daily-plan-form" method="post">
