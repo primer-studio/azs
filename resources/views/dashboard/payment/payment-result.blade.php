@@ -23,11 +23,11 @@
 {{--                    </div>
 --}}
                     <style>
-                        #nextpay {margin:auto}
-                        #nextpay img {width: 80px;}
+                        #ipg_gateway {margin:auto}
+                        #ipg_gateway img {max-width: 80px;}
                     </style>
-                    <div id="nextpay">
-                        <img src="https://nextpay.org/nx/assets/media/logos/logo-letter-9.png" alt="">
+                    <div id="ipg_gateway">
+                        <img src="{{ $invoice->paymentGateway->image }}" alt="{{ $invoice->paymentGateway->title }}">
                     </div>
 
                     <div class="paymentCode font-size-18 boldFont">

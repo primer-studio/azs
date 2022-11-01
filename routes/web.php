@@ -99,6 +99,16 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'panel', 'namespace' => 
         Route::post("/search", 'OrderController@search')->name('search');
         Route::post("/{order}/store-daily-plan", 'OrderController@storeDailyPlan')->name('store-daily-plan');
 
+
+
+
+        /** V2 - Primer Changes */
+        Route::post("/{order}/store-json-daily-plan", 'OrderController@storeJsonDailyPlan')->name('store-json-daily-plan');
+        /** V2 - Primer Changes */
+
+
+
+
         Route::post("/{order}/custom-diet-daily-plan", 'OrderController@storeCustomDailyPlan')->name('store-custom-daily-plan');
 
         Route::post("/{order}/upload-diet-file", "OrderController@uploadDietFile")->name("upload-diet-file");
@@ -232,6 +242,14 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 
     Route::post("/pay/IPG", "PaymentController@payIPG")->name('pay-ipg');
     Route::any("/pay/IPG/callback/{gateway_id}/{invoice_id}", "PaymentController@IPGCallback")->name('ipg-callback');
     Route::get("/proforma-invoice", "PaymentController@proformaInvoice")->name('proforma-invoice');
+
+
+
+    /** V2 - Primer Changes */
+    Route::post("set-discount", 'PaymentController@InvoiceSetDiscount')->name('set-order-discount');
+    /** V2 - Primer Changes */
+
+
     // remove by cart item id
     Route::post("/remove-diet-from-cart", "PaymentController@removeDietFromCart")->name('remove-diet-from-cart');
     // remove by diet id and period
@@ -262,4 +280,4 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 
 # =========================  dashboard (user) -  end  ========================= #
 
 
-Route::get('test', "TestController@test");
+Route::get('test', "TestController@adsBuddy");

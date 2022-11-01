@@ -33,8 +33,8 @@ class AdminNewOrderJob implements ShouldQueue
      */
     public function handle()
     {
-        foreach (explode('***', env('SYSTEM_ADMINS_LIST')) as $recipient) {
-            Mail::to($recipient)->send(new OrderCreated($this->backpack));
-        }
+//        foreach (explode('***', env('SYSTEM_ADMINS_LIST')) as $recipient) {
+//            Mail::to($recipient)->send(new OrderCreated($this->backpack));
+//        }
     }
 }

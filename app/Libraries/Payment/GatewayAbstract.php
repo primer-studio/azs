@@ -19,6 +19,7 @@ abstract class GatewayAbstract
     public $profile;
     public $settings;
     public $request;
+    public $discount_code;
 
     public function __construct($gateway_data, $invoice, $request)
     {

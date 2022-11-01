@@ -11,6 +11,7 @@ class Invoice extends Model
         'invoice_number',
         'total_amount',
         'total_amount_without_vat',
+        'discount_info',
         'status',
         'service_delivered',
         'payment_way',

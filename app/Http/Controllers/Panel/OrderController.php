@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\CustomDietDailyPlan;
 use App\DailyFoodPlan;
 use App\DailyRecommendationPlan;
 use App\DailySportPlan;
@@ -11,6 +12,8 @@ use App\Events\OrderSeenEvent;
 use App\Events\OrderStoredEvent;
 use App\Food;
 use App\Http\Controllers\ThirdParty\SmsController;
+use App\Invoice;
+use App\InvoiceItem;
 use App\Order;
 use App\Http\Controllers\Controller;
 use App\Recommendation;
@@ -38,7 +41,6 @@ class OrderController extends Controller
     public function edit($id, Request $request)
     {
         $order = Order::findOrFail($id);
-//        return dd($order->diet);
         // TODO[back-end]: this is for test, remove this
         if ($request->has('fake')) {
             # =========================  fake data - start ========================= #
@@ -142,6 +144,7 @@ class OrderController extends Controller
             # =========================  fake data -  end  ========================= #
         }
         $diet = $order->diet;
+//        return dd($diet);
         return view('panel.main')->nest('content', 'panel.orders.set', compact('order', 'diet'));
     }
 
@@ -417,17 +420,41 @@ class OrderController extends Controller
         return setSuccessfulResponse(route('panel.orders.edit', ['order' => $order->id]));
     }
 
-    public function storeCustomDailyPlan($order_id, Request $request) {
-        $final_plan = [];
-        foreach ($request['day'] as $day => $plan) {
-            foreach ($plan['foods'] as $food_item) {
-                $final_plan[$day]['foods'][] = Food::where('id', $food_item)->get()->first()->title;
-            }
-            foreach ($plan['sports'] as $food_item) {
-                $final_plan[$day]['sports'][] = Sport::where('id', $food_item)->get()->first()->title;
-            }
+    private function stripInput($input) {
+        $input = strip_tags($input);
+        return $input;
+    }
+
+    public function storeJsonDailyPlan($order_id, Request $request) {
+        $plan = CustomDietDailyPlan::where('order_id', $order_id)->get();
+
+        /**
+         * DEBUG PART
+         * */
+//        $plan = \App\CustomDietDailyPlan::where('order_id', $order_id)->first()->get();
+//        $pure_plan = json_decode($plan[0]->plan, true);
+//
+//        return $pure_plan;
+        /**
+         * DEBUG PART
+         * */
+
+
+        if (count($plan) == 1) {
+            $plan = CustomDietDailyPlan::where('order_id', $order_id)->update([
+                'order_id' => $order_id,
+                'plan' => $this->stripInput($request['json']),
+            ]);
+        } else {
+            $plan = CustomDietDailyPlan::insert([
+                'order_id' => $order_id,
+                'plan' => $this->stripInput($request['json']),
+            ]);
         }
 
-        return $final_plan;
+        return response()->json([
+            'status' => 200,
+            'message' => "سفارش $order_id بروزرسانی شد.",
+        ]);
     }
 }

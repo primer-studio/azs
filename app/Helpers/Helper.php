@@ -270,3 +270,17 @@ if (!function_exists('xssClean')) {
         return $data;
     }
 }
+
+if (!function_exists('StripHtmlEntities')) {
+    function StripHtmlEntities($data)
+    {
+        // Fix html entities like &nbsp;
+        $should_remove = [
+            '&nbsp;'
+        ];
+        $data = str_replace($should_remove, '', $data);
+        $data = trim($data, ' ');
+        return $data;
+    }
+
+}

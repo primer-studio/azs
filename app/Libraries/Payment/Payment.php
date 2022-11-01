@@ -11,6 +11,7 @@ use App\Invoice;
 use Facades\App\Libraries\InvoiceHelper;
 use App\Libraries\Payment\Gateways\PayPing;
 use App\Libraries\Payment\Gateways\NextPay;
+use App\Libraries\Payment\Gateways\ZarinPal as ZarinPalDriver;
 use App\PaymentGateway;
 use Illuminate\Support\Facades\Log;
 
@@ -55,6 +56,9 @@ class Payment
                 break;
             case "NextPay" :
                 $this->gateway = new NextPay($this->_gatewayData, $invoice, $this->request);
+                break;
+            case "ZarinPal" :
+                $this->gateway = new ZarinPalDriver($this->_gatewayData, $invoice, $this->request);
                 break;
             default:
                 // TODO[back-end]: fix label

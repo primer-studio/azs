@@ -1,11 +1,11 @@
 <footer class="d-flex flex-wrap justify-content-center align-items-center mt-5 w-100">
     <img src="img/footer26.png" class="w-100 mt-5" alt="">
     <div class="w-100 d-flex flex-wrap justify-content-center pb-5 box-bmi">
-        <div class="footer-section d-flex flex-wrap"> 
+        <div class="footer-section d-flex flex-wrap">
             <div class="d-flex flex-wrap align-content-start w-32">
                 <!--begin::contact-us-form-->
-                    @include('contact-us-form')
-                <!--end::contact-us-form-->
+            @include('contact-us-form')
+            <!--end::contact-us-form-->
             </div>
             <div class="d-flex flex-wrap align-content-start px-3 w-32">
                 <header class="w-100 mb-3">
@@ -24,32 +24,32 @@
                     <h5 class="font-size-18 redColor">اطلاعات تماس</h5>
                 </header>
                 <ul class="d-flex flex-wrap">
-                    <li class="d-flex align-items-center mb-3 w-100">
-                        <svg version="1.1" id="Capa_1" class="w-25px ml-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                            <g>
-                                <g>
-                                    <path d="M256,0C148.477,0,61,87.477,61,195c0,69.412,21.115,97.248,122.581,231.01C201.194,449.229,221.158,475.546,244,506
-                                        c2.833,3.777,7.279,6,12.001,6c4.722,0,9.167-2.224,12-6.002c22.708-30.29,42.585-56.507,60.123-79.638
-                                        C429.834,292.209,451,264.292,451,195C451,87.477,363.523,0,256,0z M304.219,408.235c-14.404,18.998-30.383,40.074-48.222,63.789
-                                        c-17.961-23.867-34.031-45.052-48.515-64.146C108.784,277.766,91,254.321,91,195c0-90.981,74.019-165,165-165s165,74.019,165,165
-                                        C421,254.205,403.17,277.722,304.219,408.235z"/>
-                                </g>
-                            </g>
-                            <g>
-                                <g>
-                                    <path d="M256,90c-57.897,0-105,47.103-105,105c0,57.897,47.103,105,105,105c57.897,0,105-47.103,105-105
-                                        C361,137.103,313.897,90,256,90z M256,270c-41.355,0-75-33.645-75-75s33.645-75,75-75c41.355,0,75,33.645,75,75
-                                        S297.355,270,256,270z"/>
-                                </g>
-                            </g>
-                        </svg>
+                    <!--<li class="d-flex align-items-center mb-3 w-100">-->
+                    <!--    <svg version="1.1" id="Capa_1" class="w-25px ml-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"-->
+                    <!--            viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">-->
+                    <!--        <g>-->
+                    <!--            <g>-->
+                    <!--                <path d="M256,0C148.477,0,61,87.477,61,195c0,69.412,21.115,97.248,122.581,231.01C201.194,449.229,221.158,475.546,244,506-->
+                    <!--                    c2.833,3.777,7.279,6,12.001,6c4.722,0,9.167-2.224,12-6.002c22.708-30.29,42.585-56.507,60.123-79.638-->
+                    <!--                    C429.834,292.209,451,264.292,451,195C451,87.477,363.523,0,256,0z M304.219,408.235c-14.404,18.998-30.383,40.074-48.222,63.789-->
+                    <!--                    c-17.961-23.867-34.031-45.052-48.515-64.146C108.784,277.766,91,254.321,91,195c0-90.981,74.019-165,165-165s165,74.019,165,165-->
+                    <!--                    C421,254.205,403.17,277.722,304.219,408.235z"/>-->
+                    <!--            </g>-->
+                    <!--        </g>-->
+                    <!--        <g>-->
+                    <!--            <g>-->
+                    <!--                <path d="M256,90c-57.897,0-105,47.103-105,105c0,57.897,47.103,105,105,105c57.897,0,105-47.103,105-105-->
+                    <!--                    C361,137.103,313.897,90,256,90z M256,270c-41.355,0-75-33.645-75-75s33.645-75,75-75c41.355,0,75,33.645,75,75-->
+                    <!--                    S297.355,270,256,270z"/>-->
+                    <!--            </g>-->
+                    <!--        </g>-->
+                    <!--    </svg>-->
 
-                        تهران شریعتی حسینه ارشاد کوچه هدیه پلاک 3 ، طبقه 4 ، واحد ازشنبه 
-                    </li>
+                    <!--    تهران شریعتی حسینه ارشاد کوچه هدیه پلاک 3 ، طبقه 4 ، واحد ازشنبه -->
+                    <!--</li>-->
                     <li class="d-flex align-items-center mb-3 w-100">
                         <svg version="1.1" id="Capa_1" class="w-25px ml-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                            viewBox="0 0 405.333 405.333" style="enable-background:new 0 0 405.333 405.333;" xml:space="preserve">
+                             viewBox="0 0 405.333 405.333" style="enable-background:new 0 0 405.333 405.333;" xml:space="preserve">
                             <g>
                                 <g>
                                     <path d="M373.333,266.88c-25.003,0-49.493-3.904-72.725-11.584c-11.328-3.904-24.171-0.896-31.637,6.699l-46.016,34.752
@@ -65,11 +65,11 @@
                             </g>
                         </svg>
 
-                        <a href="tel:02123051172" title="021-23051172"> 021-23051172 </a> 
+                        <a href="tel:+989352230154" title="021-23051172"> 09352230154 </a>
                     </li>
                     <li class="d-flex align-items-center mb-3 w-100">
                         <svg version="1.1" id="Capa_1" class="w-25px ml-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                             viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                             <g>
                                 <g>
                                     <path d="M502.747,74.024H9.253C4.143,74.024,0,78.167,0,83.277v345.446c0,4.998,3.965,9.059,8.92,9.236
@@ -81,13 +81,13 @@
                                 </g>
                             </g>
                         </svg>
-                        info@azshanbe.me 
+                        info@azshanbe.me
                     </li>
                     <li class="d-flex align-items-center mb-3 w-100">
                         <ul class="d-flex align-items-center flex-wrap social-footer justify-content-center">
                             <li class=" ml-3"><a href="http://instagram.com/azshanbe.me/" class="instagram-footer d-flex align-items-center justify-content-center" title="اینستاگرام ازشنبه"><i class="icon icon-instagram"></i></a></li>
                             <li>
-                                <a href="https://bit.ly/2XsNjDj" class="whatsapp-footer d-flex align-items-center justify-content-center" title="ارتباط با پشتیبان">
+                                <a href="https://wa.me/+989352230154" class="whatsapp-footer d-flex align-items-center justify-content-center" title="ارتباط با پشتیبان">
                                     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="15px" y="15px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                                         <path style="fill:#FAFAFA;" d="M256.064,0h-0.128l0,0C114.784,0,0,114.816,0,256c0,56,18.048,107.904,48.736,150.048l-31.904,95.104
                                                 l98.4-31.456C155.712,496.512,204,512,256.064,512C397.216,512,512,397.152,512,256S397.216,0,256.064,0z"></path>
@@ -178,7 +178,7 @@
 </div>
 
 <div class="pos-fixed justify-content-center flex-wrap bg-white mm-menu">
-    <div class="popUpClose desktopVersion cursor-pointer close-modal" data-target=".mm-menu"></div> 
+    <div class="popUpClose desktopVersion cursor-pointer close-modal" data-target=".mm-menu"></div>
     <header class="w-100 d-flex flex-wrap justify-content-center align-items-center py-3">
         <h4 class="font-size-24 redColor"> از شنبه </h4>
         <span class="w-100 greenColor font-16 d-flex justify-content-center">به وزن ایده آلت برس</span>
@@ -214,10 +214,10 @@
 </div>
 
 <div class="fixed-reg-btn goto-reg-btn">
-    <a href="https://azshanbe.me/#SignInBox"> دریافت رژیم / ۴۹ هزار تومان </a>
+    <a href="https://azshanbe.me/#SignInBox"> دریافت رژیم </a>
 </div>
 
-<a href="https://bit.ly/2XsNjDj" target="_blank" class="custom-support-btn" title="ارتباط با پشتیبان">
+<a href="https://wa.me/+989352230154" target="_blank" class="custom-support-btn" title="ارتباط با پشتیبان">
     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="30px" y="30px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
         <path style="fill:#FAFAFA;" d="M256.064,0h-0.128l0,0C114.784,0,0,114.816,0,256c0,56,18.048,107.904,48.736,150.048l-31.904,95.104
 				l98.4-31.456C155.712,496.512,204,512,256.064,512C397.216,512,512,397.152,512,256S397.216,0,256.064,0z"></path>

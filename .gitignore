@@ -24,3 +24,4 @@ public.zip
 *.sql
 *.zip
 /storage/*
+.env

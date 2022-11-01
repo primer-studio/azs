@@ -88,6 +88,12 @@ class ProfileHelper
         return $profile;
     }
 
+    public function DoesUserSetRealName($profile_id = 0)
+    {
+        $profile = $profile_id ? $this->getProfile($profile_id) : $this->getCurrentProfile();
+        return (!str_contains($profile->name, 'کاربر'));
+    }
+
     /**
      * encrypt, the save current_profile_id in session
      * @param $profile_id

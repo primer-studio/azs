@@ -41,7 +41,7 @@
         <div class="mainQuestions organizer">
             <div class="desktopVersion questionCategories"><span>سوالات پزشکی</span></div>
             <div>
-                <p class="lead">{{ $current_step->description }}</p>
+                <p class="lead">{{ strip_tags($current_step->description) }}</p>
                 @UserAjaxForm(['form_id' => 'questions', 'is_update' => false ])@endUserAjaxForm
                 <form action="{{ route('dashboard.diets.save-step-data', ['step_number' => $step_number, 'period' => $period,'slug' => $diet->slug]) }}" method="post" id="questions">
                 @csrf

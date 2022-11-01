@@ -10,7 +10,6 @@ use App\Exceptions\StopException;
 use App\Invoice;
 use App\Libraries\Payment\GatewayAbstract;
 use App\Libraries\Payment\GatewayInterface;
-use Facades\App\Libraries\InvoiceHelper;
 use Facades\App\Libraries\ProfileHelper;
 use Facades\App\Libraries\UserHelper;
 use GuzzleHttp\Exception\GuzzleException;
@@ -21,13 +20,12 @@ use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
 
 
-class NextPay extends GatewayAbstract implements GatewayInterface
+class ZarinPal extends GatewayAbstract implements GatewayInterface
 {
     protected $_guzzleClient;
     protected $_requestHeaders;
     protected $_createPayCode; // IPG passes this code while creating new payment
     protected $final_amounts;
-
 
     public function __construct($gateway_data, $invoice, $request)
     {
@@ -53,11 +51,12 @@ class NextPay extends GatewayAbstract implements GatewayInterface
      */
     public function init($dicount_code = null)
     {
-        Log::info("NextPay class init request started invoice: " . $this->invoice->id);
+        Log::info("ZarinPal class init request started invoice: " . $this->invoice->id);
         // NOTICE: gateway_id and invoice_id must NOT be overwrote
         $route_parameters = UserHelper::getLastQueryStringData();
         $route_parameters['gateway_id'] = encrypt($this->gateway->id);
         $route_parameters['invoice_id'] = encrypt($this->invoice->id);
+
 
         /**
          * check for active discount in cycle to reduce total price.
@@ -96,6 +95,7 @@ class NextPay extends GatewayAbstract implements GatewayInterface
             ]);
         }
 
+
         $return_url = route('dashboard.ipg-callback', $route_parameters);
 
         $this->final_amounts['rials'] = (isset($new_total)) ? $this->convertTomanToRial($new_total) :  $this->invoice->total_amount;
@@ -104,23 +104,28 @@ class NextPay extends GatewayAbstract implements GatewayInterface
         Cache::put("profile_".ProfileHelper::getCurrentProfile()->id."_last_amount_value", json_encode($this->final_amounts));
 
         $data = [
-            "amount" => (isset($new_total)) ? $new_total : $this->convertRialToToman($this->invoice->total_amount),
+            "merchant_id" => $this->gateway->data->token,
+            "amount" => (isset($new_total)) ? $this->convertTomanToRial($new_total) : $this->invoice->total_amount,
+            "amount_tomans" => (isset($new_total)) ? $new_total : $this->convertRialToToman($this->invoice->total_amount),
+            "callback_url" => $return_url,
+            "description" => $this->settings->short_title . " | " . $this->profile->name,
+            "meta_data" => json_encode(["mobile" => $this->profile->mobile_number, "email" => '']),
+            // below settings not used in zarinpal gateway, but we will use them for logging.
             "returnUrl" => $return_url,
             "payerIdentity" => $this->profile->mobile_number,
             "payerName" => $this->profile->name,
             // TODO[back-end]: change the following label
-            "description" => $this->settings->short_title,
             "clientRefId" => encrypt($this->invoice->id)
         ];
 
-        Log::info("NextPay class init request body data (sent to NextPay) invoice: " . $this->invoice->id . " body: " . json_encode($data));
+        Log::info("ZarinPal class init request body data (sent to ZarinPal) invoice: " . $this->invoice->id . " body: " . json_encode($data));
 
         try {
             // star to pay using NextPay api
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://nextpay.org/nx/gateway/token',
+                CURLOPT_URL => 'https://api.zarinpal.com/pg/v4/payment/request.json',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -128,7 +133,15 @@ class NextPay extends GatewayAbstract implements GatewayInterface
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => 'api_key=' . $this->gateway->data->token . '&amount=' . $data['amount'] . '&order_id=' . $this->invoice->id . '&payer_name=' . $data['payerName'] . '&customer_phone=' . $data['payerIdentity'] . '&callback_uri='.$data['returnUrl'],
+                CURLOPT_POSTFIELDS => 'merchant_id=' . $this->gateway->data->token
+                    . '&amount=' . $data['amount']
+                    . '&callback_url=' . $data['returnUrl']
+                    . '&description=' . $data['description']
+                    . '&meta_data=' . $data['meta_data']
+                    . '&order_id=' . $this->invoice->id
+                    . '&payer_name=' . $data['payerName']
+                    . '&customer_phone=' . $data['payerIdentity']
+                ,
 
                 // to debug ipg curl call
                 CURLOPT_SSL_VERIFYHOST => false,
@@ -137,8 +150,8 @@ class NextPay extends GatewayAbstract implements GatewayInterface
 
             $response = curl_exec($curl);
             curl_close($curl);
-            $tid = json_decode($response)->trans_id;
-            Log::info("NextPay class init request invoice: " . $this->invoice->id . " nextpay_trans_id:" . $tid . " ipg_init_refid received: " . $this->_createPayCode);
+            $tid = (json_decode($response))->data->authority;
+            Log::info("ZarinPal class init request invoice: " . $this->invoice->id . " zarinpal_trans_id:" . $tid . " ipg_init_response received: " . $response);
             return $tid;
 
         } catch (Exception $exception) {
@@ -150,18 +163,18 @@ class NextPay extends GatewayAbstract implements GatewayInterface
     public function goToWebGate($tid = 'notSet')
     {
         if ($tid == 'notSet') {
-            return new Exception('NextPay (goToWebGate) trans_id is null or not set. $tid value is ['.$tid.']');
+            return new Exception('Zarinpal (goToWebGate) trans_id([\'data\'][\'authority\']) is null or not set. $tid value is [' . $tid . ']');
         }
         // set session to track the first page which will be loaded after this step
         $session_value = $this->_createPayCode;
         $session_value .= "____" . (!empty($this->invoice->id) ? $this->invoice->id : "");
         $session_value .= "____" . (!empty($tid) ? "tid: $tid" : "");
         session()->put("redirected_to_ipg", $session_value);
-        Log::info("NextPay class redirecting tracking session set session_value is $session_value , createPayCode : " . $this->_createPayCode . ", invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
+        Log::info("ZarinPal class redirecting tracking session set session_value is $session_value , createPayCode : " . $this->_createPayCode . ", invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
 
-        Log::info("NextPay class redirecting (goToWebGate) , createPayCode : " . $this->_createPayCode . ", invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
+        Log::info("ZarinPal class redirecting (goToWebGate) , createPayCode : " . $this->_createPayCode . ", invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
 //        return redirect()->to('https://api.payping.ir/v2/pay/gotoipg/' . $this->_createPayCode);
-        return redirect()->to("https://nextpay.org/nx/gateway/payment/$tid");
+        return redirect()->to("https://www.zarinpal.com/pg/StartPay/$tid");
     }
 
     /**
@@ -169,15 +182,14 @@ class NextPay extends GatewayAbstract implements GatewayInterface
      */
     public function callback()
     {
-        Log::info("NextPay class callback, invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " request: " . (!empty(json_encode($this->request->input())) ? json_encode($this->request->input()) : ""));
+        Log::info("ZarinPal class callback, invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " request: " . (!empty(json_encode($this->request->input())) ? json_encode($this->request->input()) : ""));
 
         $validator = Validator::make($this->request->all(), [
-            'trans_id' => 'required',
-            'order_id' => 'required',
-            'amount' => 'required',
+            'Authority' => 'required',
+            'Status' => 'required',
         ]);
         if ($validator->fails()) {
-            Log::info("NextPay class callback validator fails invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : "") . "request: " . (!empty(json_encode($this->request->input())) ? json_encode($this->request->input()) : ""));
+            Log::info("ZarinPal class callback validator fails invoice: " . (!empty($this->invoice->id) ? $this->invoice->id : "") . "request: " . (!empty(json_encode($this->request->input())) ? json_encode($this->request->input()) : ""));
 
             // update invoice status
             $this->updateInvoice([
@@ -194,10 +206,10 @@ class NextPay extends GatewayAbstract implements GatewayInterface
         }
         // update invoice refid
         $this->updateInvoice([
-            'refid' => $this->request->input('trans_id')
+            'refid' => $this->request->input('Authority')
         ]);
 
-        return $this->verifyTransaction($this->request->input('trans_id'), $this->request->input('amount'));
+        return $this->verifyTransaction($this->request->input('Authority'), $this->invoice->total_amount);
     }
 
     /**
@@ -213,7 +225,7 @@ class NextPay extends GatewayAbstract implements GatewayInterface
      */
     public function verifyTransaction($trans_id = null, $amount = null)
     {
-        Log::info("NextPay verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
+        Log::info("ZarinPal verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : ""));
 
         try {
             $vals = json_decode(Cache::pull("profile_".ProfileHelper::getCurrentProfile()->id."_last_amount_value"), true);
@@ -221,7 +233,7 @@ class NextPay extends GatewayAbstract implements GatewayInterface
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://nextpay.org/nx/gateway/verify',
+                CURLOPT_URL => 'https://api.zarinpal.com/pg/v4/payment/verify.json',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -229,7 +241,11 @@ class NextPay extends GatewayAbstract implements GatewayInterface
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => 'api_key=' . $this->gateway->data->token .'&amount=' . $amount . '&trans_id=' . $trans_id,
+                CURLOPT_POSTFIELDS => 'merchant_id=' . $this->gateway->data->token
+//                    . '&amount=' . intval($amount)
+                    . '&amount=' . intval($vals['rials'])
+                    . '&authority=' . $trans_id
+            ,
 
                 // to debug ipg curl call
                 CURLOPT_SSL_VERIFYHOST => false,
@@ -239,10 +255,11 @@ class NextPay extends GatewayAbstract implements GatewayInterface
             $response = curl_exec($curl);
 
             curl_close($curl);
-            $status_code = json_decode($response)->code;
+            $status_code = (json_decode($response))->data->code;
             $encoded_response = $response;
+            Log::emergency('ZarinPal Class Trying To get Code from [(json_decode($response))->data->code] returns error. to Debug, this is the pure encoded response: '.$encoded_response);
 
-            if ($status_code != 0) {
+            if (!in_array($status_code, [100, 101], true)) {
                 // update invoice status
                 $this->updateInvoice([
                     'status' => GeneralConstants::TRANSACTION_VERIFY_DATA_NOT_CORRECT
@@ -252,7 +269,8 @@ class NextPay extends GatewayAbstract implements GatewayInterface
                 ])->update([
                     'is_valid' => 0
                 ]);
-                $log_message = "verify status code is not 0 (transaction did not verified ) status code is: " . $status_code . " encoded_response: " . $encoded_response;
+                $log_message = "verify status code is not 100/101 (transaction did not verified ) status code is: " . $status_code . " response is in next line... ";
+                $log_message = "----> encoded_response: " . $encoded_response;
                 // TODO[back-end]: fix label
                 $this->throwException($log_message, __("callback data is not correct"), null, true);
             }
@@ -267,12 +285,12 @@ class NextPay extends GatewayAbstract implements GatewayInterface
             ])->update([
                 'is_valid' => 0
             ]);
-            Log::info("NextPay verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " verified");
+            Log::info("ZarinPal verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " verified");
 
             return true;
 
         } catch (Exception $exception) {
-            Log::info("NextPay verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " CurlException");
+            Log::info("ZarinPal verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " CurlException");
             // update invoice status
             $this->updateInvoice([
                 'status' => GeneralConstants::TRANSACTION_VERIFY_DATA_NOT_CORRECT
@@ -285,7 +303,7 @@ class NextPay extends GatewayAbstract implements GatewayInterface
             // TODO[back-end]: fix label
             $this->throwException("wrong data from gateway to verify transaction", __("general.wrong_data_from_gateway_to_verify_transaction"), $exception, true);
         } catch (\Exception $exception) {
-            Log::info("NextPay verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " Exception");
+            Log::info("ZarinPal verifyTransaction invoice " . (!empty($this->invoice->id) ? $this->invoice->id : "") . " Exception");
             // update invoice status
             $this->updateInvoice([
                 'status' => GeneralConstants::TRANSACTION_VERIFY_DATA_NOT_CORRECT

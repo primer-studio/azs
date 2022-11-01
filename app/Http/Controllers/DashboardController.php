@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Diet;
+use App\Libraries\UserHelper;
 use Facades\App\Libraries\ProfileHelper;
 use Illuminate\Http\Request;
 
@@ -24,7 +26,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard.main')->nest('content', 'dashboard.home');
+        $orders = ProfileHelper::getCurrentProfile()->orders()->latest()->with('invoiceItem')->paginate(3);
+        return view('dashboard.main')->nest('content', 'dashboard.home', compact('orders'));
     }
 
     public function notifications()

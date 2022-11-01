@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Discount;
 use App\Events\OfflinePaymentRegisteredEvent;
 use App\Exceptions\StopException;
+use App\Libraries\InvoiceHelper;
 use App\Rules\ValidJalaliDate;
 use Facades\App\Libraries\CartHelper;
 use Facades\App\Libraries\DietHelper;
@@ -13,6 +15,9 @@ use App\OfflinePayment;
 use Facades\App\Libraries\QuestionHelper;
 use Facades\App\Libraries\SettingHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -58,7 +63,7 @@ class PaymentController extends Controller
         return setSuccessfulResponse(route('dashboard.invoices.index'));
     }
 
-    public function proformaInvoice()
+    public function proformaInvoice($json = false)
     {
         $profile = ProfileHelper::getCurrentProfile();
         $payment_gateways = PaymentGatewayHelper::getAllPaymentGateways(true, true);
@@ -100,8 +105,88 @@ class PaymentController extends Controller
         // $total_amount = $total_diets_amount + VAT
         $vat = ($vat_percentage / 100) * $total_diets_amount;
         $total_amount = $total_diets_amount + $vat;
+
+        if ($json) {
+            return (object) [
+                'status' => 200,
+                'total' => $total_amount = $total_diets_amount + $vat
+            ];
+        }
+
         return view('dashboard.main')->nest('content', 'dashboard.payment.proforma-invoice', compact('profile', 'diets', 'payment_gateways', 'total_diets_amount', 'vat', 'total_amount'));
     }
+
+    public function InvoiceSetDiscount(Request $request)
+    {
+        $total = $this->proformaInvoice(true)->total;
+
+
+        $discount_code = Discount::where('hash', $request['code'])->first();
+
+
+        $user_used_otu_before = 0;
+        if ($discount_code != null && $discount_code->is_otu) {
+            $user_used_otu_before = DB::table('user_discounts')->where([
+                'profile_id' => ProfileHelper::getCurrentProfile()->id,
+                'discount_id' => $discount_code->id,
+            ])->count();
+        }
+
+        if (!$discount_code || ($discount_code != false && !$discount_code->is_active) || $user_used_otu_before != 0 ) {
+            return response([
+                'user_used_once' => $user_used_otu_before,
+                'status' => 400,
+                'message' => 'کد موردنظر معتبر نیست.',
+                'log' => 'otubeforeonce',
+                'timestamp' => time(),
+                'new_total' => money($total, true)
+            ]);
+        }
+
+        if ($discount_code->is_active) {
+            if ($discount_code->type == 'simple') {
+//                die('simple');
+                $new_total = money($total - (float) $discount_code->amount, true);
+            } elseif ($discount_code->type == 'percentage') {
+//                die('percentage');
+                $new_total = money($total - ($total * ($discount_code->amount/100)), true);
+            } else {
+                $new_total = money($total, true);
+            }
+        }
+
+        if ($discount_code->is_active) {
+            $otu = DB::table('user_discounts')->insert([
+                'invoice_id' => 0,
+                'profile_id' => ProfileHelper::getCurrentProfile()->id,
+                'discount_id' => $discount_code->id,
+                'is_valid' => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+
+        /**
+         * here we set a relation between user invoice and invoice discountes,
+         * and in the payment gateway class we check for exiting discount to renew the total amount for gateway.
+         */
+        return response([
+            'discount' => $discount_code,
+            'status' => 200,
+            'message' => 'با موفقیت اعمال گردید.',
+            'timestamp' => time(),
+            'new_total' => (isset($new_total)) ? $new_total : money($total, true)
+        ]);
+
+        /**
+         *  1- making the discount codes model
+         *  2- bind the users code use times to orders
+         *  3- subtract price from total inside the ipg controller methods
+         *  4- ready to rock and roll
+         * */
+
+    }
+
 
     public function payIPG(Request $request)
     {
