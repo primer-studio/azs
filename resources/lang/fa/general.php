@@ -41,6 +41,10 @@ return [
     'orders' => 'سفارش ها',
     'invoice' => 'صورت حساب',
     'invoices' => 'صورت حساب ها',
+    'discount' => 'تخفیف',
+    'discounts' => 'تخفیف ها',
+    'simple' => 'ساده',
+    'percentage' => 'درصد',
     'questions-tidy' => 'سوال ها - مراحل',
     'profile' => 'پروفایل',
     'profiles' => 'پروفایل ها',
@@ -206,4 +210,13 @@ return [
     "basic_information" => "اطلاعات پایه پروفایل",
     "diet_questions" => "سوالات رژیم ها",
     "profile_form_alert" => "فرم قبلی اطلاعات پروفایل به 2 فرم جداگانه تقسیم شده است، به یاد داشته باشید باید اطلاعات هر فرم را به صورت جداگانه ثبت کنید",
-];
+
+
+    // generals
+    "title" => 'عنوان',
+    "properties" => "خصوصیات",
+    "type" => "نوع",
+    "code" => "کد",
+    "amount" => "مقدار",
+    "one_time_use" => "یکبار مصرف"
+    ];

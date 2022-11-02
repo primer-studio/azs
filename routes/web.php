@@ -123,6 +123,15 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'panel', 'namespace' => 
     });
     # =========================  invoices -  end  ========================= #
 
+    # =========================  discounts - start ========================= #
+    Route::group(['prefix' => 'discounts', 'as' => 'discounts.'], function () {
+        Route::get("/", 'DiscountController@index')->name('index');
+        Route::any("/add", 'DiscountController@create')->name('add');
+        Route::any("/edit/{id}", 'DiscountController@edit')->name('edit');
+    });
+
+    # =========================  discounts -  end  ========================= #
+
     # =========================  users - start ========================= #
     Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
         Route::post("/set-roles/{user}", 'UserController@setRoles')->name('set-roles');
@@ -219,6 +228,8 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 
         Route::get('/{invoice}', "InvoiceController@show")->name('show');
         Route::post("/recheck-invoice-item/{invoice_item}", 'InvoiceController@recheckInvoiceItem')->name('recheck-invoice-item');
     });
+    # =========================  invoice -  end  ========================= #
+
     # =========================  invoice -  end  ========================= #
 
     # =========================  order - start ========================= #

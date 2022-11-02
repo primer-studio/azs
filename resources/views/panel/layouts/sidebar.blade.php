@@ -113,6 +113,17 @@
             @endcan
             <!-- end: invoices -->
 
+            <!-- begin: discounts -->
+                <li class="kt-menu__item  kt-menu__item--submenu  @if(Request::is('panel/discounts*'))kt-menu__item--here kt-menu__item--open @endif" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon2-list-2"></i><span class="kt-menu__link-text">@lang('general.discounts')</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                    <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                        <ul class="kt-menu__subnav">
+                            <li class="kt-menu__item  @if($current_route_name == 'panel.discounts.index') kt-menu__item--active @endif" aria-haspopup="true"><a href="{{ route('panel.discounts.index') }}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">@lang('general.list', ['title' => __('general.discounts')])</span></a></li>
+                            <li class="kt-menu__item  @if($current_route_name == 'panel.discounts.add') kt-menu__item--active @endif" aria-haspopup="true"><a href="{{ route('panel.discounts.add') }}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">@lang('general.add', ['title' => __('general.discount')])</span></a></li>
+                        </ul>
+                    </div>
+                </li>
+            <!-- end: discounts -->
+
             <!-- begin: profiles -->
             @can('see_profiles_data')
                 <li class="kt-menu__item  kt-menu__item--submenu  @if(Request::is('panel/profiles*'))kt-menu__item--here kt-menu__item--open @endif" aria-haspopup="true" data-ktmenu-submenu-toggle="hover"><a href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon flaticon2-list-2"></i><span class="kt-menu__link-text">@lang('general.profiles')</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
