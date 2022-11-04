@@ -105,15 +105,18 @@
 
     <base href="{{ url('dashboard-assets') }}/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/styles.css?v=1.0.94') }}">
-        <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/circle.css?v=1.0.2') }}">
-        <link rel="stylesheet" href="{{  asset('/dashboard-assets/third-party/toastr-master/toastr.min.css') }}">
-        <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/rtop.videoPlayer.1.0.1.min.css') }}" />
+    <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/styles.css?v=1.0.94') }}">
+    <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/circle.css?v=1.0.2') }}">
+    <link rel="stylesheet" href="{{  asset('/dashboard-assets/third-party/toastr-master/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{  asset('/dashboard-assets/css/rtop.videoPlayer.1.0.1.min.css') }}" />
+
+    <link rel="stylesheet" href=" {{ asset('/dashboard-assets/css/filepond.css') }}">
+    <link rel="stylesheet" href=" {{ asset('/dashboard-assets/css/filepond-plugin-image-preview.css') }}">
     @stack('styles')
 </head>
 
 <body class="whiteBackColor">
-@if(env('APP_ENG') !== 'production')
+@if(env('APP_ENG') == 'local')
     <div style="width: 100%; padding: 1%; margin-bottom: 2px; background: #721c24; color: white; text-align: center; font-family: Courier New, Courier, monospace">
         <p>you are in local/dev server</p>
     </div>
@@ -190,6 +193,52 @@
     @endif
     {{--end::larave validation error message (by redirect back)--}}
 
+<script type="module" src="{{ asset('/dashboard-assets/js/ionicons.esm.js') }}"></script>
+<script src="{{ asset('/dashboard-assets/js/ionicons.js') }}"></script>
+
+<script src="{{ asset('/dashboard-assets/js/filepond-plugin-image-preview.js') }}"></script>
+<script src="{{ asset('/dashboard-assets/js/filepond-plugin-file-validate-type.js') }}"></script>
+<script src="{{ asset('/dashboard-assets/js/filepond.js') }}"></script>
+<script>
+    FilePond.registerPlugin(
+        FilePondPluginFileValidateType,
+        FilePondPluginImagePreview
+    );
+    // const pond = FilePond.parse(document.body);
+
+    FilePond.setOptions({
+        acceptedFileTypes: ['image/*', 'video/*'],
+        labelIdle: '.<span class="filepond--label-action"> انتخاب کنید </span> فایل را رها کنید و یا',
+        labelFileProcessing: '... در حال آپلود',
+        labelInvalidField: '.فرمت غیر مجاز است',
+        labelFileProcessingComplete: '.با موفقیت آپلود شد',
+        labelTapToCancel: 'برای لغو کلیک کنید',
+        labelTapToRetry: '؟تلاش مجدد',
+        allowRemove: true,
+        allowRevert: false,
+
+        // plugin imagePreview settings
+        allowImagePreview: true,
+        imagePreviewMarkupShow: true,
+
+        server:{
+            url: '{{ route('dashboard.assets.upload') }}',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            method: 'POST',
+        }
+    });
+    const inputElement = document.querySelector('input[type="file"]');
+    const pond = FilePond.create( inputElement );
+    pond.on('processfiles', (error, file) => {
+        if (error) {
+            console.log(error);
+        } else {
+            window.location.reload();
+        }
+    });
+</script>
 </body>
 
 </html>

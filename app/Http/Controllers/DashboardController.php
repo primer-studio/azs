@@ -35,4 +35,9 @@ class DashboardController extends Controller
         $profile = ProfileHelper::getCurrentProfile();
         return view('dashboard.main')->nest('content', 'dashboard.notifications.list', compact('profile'));
     }
+
+    public function assets()
+    {
+
+    }
 }

@@ -210,6 +210,9 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'panel', 'namespace' => 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('/', 'DashboardController@index')->name('home');
     Route::get("/diets", "DietController@index")->name('diets');
+    Route::any('/assets/{action?}/{id?}', 'ProfileAssetsController@list')->name('assets');
+    Route::get('/profile_assets/{hash}', 'ProfileAssetsController@secretURL')->name('assets.secretURL');
+    Route::post('/profile_assets/upload', 'ProfileAssetsController@upload')->name('assets.upload');
 
     # =========================  profile - start ========================= #
     Route::group(['prefix' => 'my-profiles', 'as' => 'my-profiles.'], function () {
@@ -253,8 +256,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'dashboard', 'as' => 
     Route::post("/pay/IPG", "PaymentController@payIPG")->name('pay-ipg');
     Route::any("/pay/IPG/callback/{gateway_id}/{invoice_id}", "PaymentController@IPGCallback")->name('ipg-callback');
     Route::get("/proforma-invoice", "PaymentController@proformaInvoice")->name('proforma-invoice');
-
-
 
     /** V2 - Primer Changes */
     Route::post("set-discount", 'PaymentController@InvoiceSetDiscount')->name('set-order-discount');

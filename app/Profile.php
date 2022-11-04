@@ -85,6 +85,11 @@ class Profile extends Model
         return $this->hasMany('App\ProfileLog');
     }
 
+    public function profileAssets()
+    {
+        return $this->hasMany('App\ProfileAssets');
+    }
+
     public function inProgressBy()
     {
         return $this->belongsTo('App\Admin', 'in_progress_by', 'id');

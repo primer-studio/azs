@@ -38,7 +38,7 @@ class DiscountController extends Controller
             $request->validate([
                 'title' => 'required|string|min:1',
                 'type' => 'required|string',
-                'hash' =>  'required|string|min:3',
+                'hash' =>  'required|string|min:3|unique:discounts',
                 'amount' =>  'required|numeric',
             ]);
             $is_active = ($request->has('is_active')) ? 1 : 0;
@@ -67,7 +67,7 @@ class DiscountController extends Controller
             $request->validate([
                 'title' => 'required|string|min:1',
                 'type' => 'required|string',
-                'hash' =>  'required|string|min:3',
+                'hash' =>  'required|string|min:3|unique:discounts',
                 'amount' =>  'required|numeric',
             ]);
             $is_active = ($request->has('is_active')) ? 1 : 0;

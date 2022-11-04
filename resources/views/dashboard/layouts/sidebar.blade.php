@@ -82,6 +82,19 @@
         </div>
     </li>
 
+    <li class="cursor-pointer pos-relative @if(Request::is('dashboard/assets*')) active @endif" data-tab="assets">
+        <a class="pos-absolute" href="{{ route('dashboard.assets', 'list') }}"></a>
+{{--        <span class="menuItemIcon icon icon-apple"></span>--}}
+
+        <ion-icon style="font-size: 20px; @if(Request::is('dashboard/assets*')) color: darkseagreen @endif" name="document-outline"></ion-icon>
+        <div class="menuItem">
+
+            فایل‌ها
+
+            <span class="icon icon-forward whiteColor"></span>
+        </div>
+    </li>
+
     <li class="cursor-pointer pos-relative @if(Request::is('dashboard/my-profiles/current-profile*')) active @endif"
         data-tab="editProfile">
         <a class="pos-absolute" href="{{ route('dashboard.my-profiles.current-profile') }}"></a>

@@ -13,7 +13,28 @@
                     </div>
                     <div class="form-group">
                         <label>@lang('general.code')</label>
-                        <input name="hash" id="hash" type="text" class="form-control" value="{{ old('hash') }}">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a onclick="renderRandom(5)" class="btn btn-default">
+                                    <i class="fa fa-random"></i>
+                                </a>
+                              </span>
+                            <input name="hash" id="hash" type="text" class="form-control" value="{{ old('hash') }}">
+                        </div>
+
+
+                        <script>
+                            function renderRandom(length) {
+                                var result = '';
+                                var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                                var charactersLength = characters.length;
+                                for (var i = 0; i < length; i++) {
+                                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                                }
+                                document.querySelector('#hash').value = '';
+                                document.querySelector('#hash').value = result;
+                            }
+                        </script>
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -41,29 +62,30 @@
                     </div>
                 </div>
             </div>
-{{--            <div class="col-12">--}}
-{{--                <div class="form-group">--}}
-{{--                    <label><textarea name="description"  class="hi-tinymce-editor form-control">@isset($sport->description){{ $sport->description }}@endisset</textarea> @lang('validation.attributes.description')</label>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="form-group">--}}
-{{--                <label>@lang('validation.attributes.status')</label>--}}
-{{--                <select name="status" class="form-control">--}}
-{{--                    <option @if(isset($sport->status) && $sport->status ==  'active') selected @endif value="active">@lang('general.active')</option>--}}
-{{--                    <option @if(isset($sport->status) && $sport->status ==  'inactive') selected @endif value="inactive">@lang('general.inactive')</option>--}}
-{{--                </select>--}}
-{{--            </div>--}}
-{{--            <div class="form-group">--}}
-{{--                <label>@lang('validation.attributes.sort')</label>--}}
-{{--                <input name="sort" type="number" class="form-control" @isset($sport->sort) value="{{ $sport->sort }}" @endisset>--}}
-{{--            </div>--}}
+            {{--            <div class="col-12">--}}
+            {{--                <div class="form-group">--}}
+            {{--                    <label><textarea name="description"  class="hi-tinymce-editor form-control">@isset($sport->description){{ $sport->description }}@endisset</textarea> @lang('validation.attributes.description')</label>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
+            {{--            <div class="form-group">--}}
+            {{--                <label>@lang('validation.attributes.status')</label>--}}
+            {{--                <select name="status" class="form-control">--}}
+            {{--                    <option @if(isset($sport->status) && $sport->status ==  'active') selected @endif value="active">@lang('general.active')</option>--}}
+            {{--                    <option @if(isset($sport->status) && $sport->status ==  'inactive') selected @endif value="inactive">@lang('general.inactive')</option>--}}
+            {{--                </select>--}}
+            {{--            </div>--}}
+            {{--            <div class="form-group">--}}
+            {{--                <label>@lang('validation.attributes.sort')</label>--}}
+            {{--                <input name="sort" type="number" class="form-control" @isset($sport->sort) value="{{ $sport->sort }}" @endisset>--}}
+            {{--            </div>--}}
 
             @include('panel.includes.tinymce-editor')
 
 
             <div class="form-group">
                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <button class="submit-button btn btn-success" type="submit">@lang('general.submit') <i class="la la-floppy-o p-0"></i></button>
+                    <button class="submit-button btn btn-success" type="submit">@lang('general.submit') <i
+                            class="la la-floppy-o p-0"></i></button>
                 </div>
             </div>
         </form>
